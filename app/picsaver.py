@@ -107,3 +107,8 @@ def Location_Search():
 @app.route("/Tags/")
 def Tags():
     return "Tags function()"
+
+# Running the app
+
+if (__name__)=="__main__":
+	app.run()
