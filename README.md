@@ -29,7 +29,9 @@ Find your Application's credentials and enter the same in the secret.py file
 ## Start the app
 
 Start up the terminal and enter the follwing command
+```
 		$python picsaver.py
+```
 
 Open browser, <http://localhost:5000>.
 
