@@ -66,12 +66,28 @@ def about():
 
 @app.route("/User_Recent_Media/")
 def User_Recent_Media():
-    return "recent function()"
+    u = InstagramAPI(access_token=session['access_token'], client_secret=secret.secrets['client_secret'])
+    recent_media, next_ = u.user_recent_media()
+    photos_thumbnail = []
+    photos_standard = []
+    for media in recent_media:
+        photos_thumbnail.append("%s" % media.images['thumbnail'].url)
+        photos_standard.append("%s" % media.images['standard_resolution'].url)
+    return render_template("recent.html",thumb=photos_thumbnail,photos=photos_standard)
 
 
 @app.route("/User_Media_Feed/")
 def User_Media_Feed():
-    return "User_Media_Feed function()"
+     u = InstagramAPI(access_token=session['access_token'], client_secret=secret.secrets['client_secret'])
+    media_feed, next_ = u.user_media_feed()
+    photos_thumbnail = []
+    photos_standard = []
+    while next_:
+        for media in media_feed:
+            photos_thumbnail.append("%s" % media.images['thumbnail'].url)
+            photos_standard.append("%s" % media.images['standard_resolution'].url)
+        media_feed, next_ = u.user_media_feed(with_next_url=next_)
+    return render_template("recent.html",thumb=photos_thumbnail,photos=photos_standard)
 
 
 @app.route("/Location_Recent_Media/")

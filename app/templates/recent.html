@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+    {% block title %}
+        {{ title }}
+    {% endblock %}
+
+ {% block nav %}
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="{{url_for("main")}}">Home</a>
+                    </li>
+                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a>
+                    </li>
+                    <li role="presentation"><a href="{{url_for("about")}}">About</a>
+                    </li>
+                </ul>
+                {% endblock %}
+
+{% block content %}
+    {% for i in thumb %}
+    {% set outer_loop = loop %}
+         <a href="{{photos[outer_loop.index-1]}}"><img src="{{i}}"/> </a>
+    {% endfor %}
+{% endblock %}
