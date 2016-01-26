@@ -1,13 +1,19 @@
-<html>
-    <head>
-        <title>Call.html page</title>
-    </head>
+{% extends "index.html" %}
+    {% block title %}
+        Welcome
+    {% endblock %}
 
-    <body>
-        <h1>Heading h1
-        </h1>
-
-        <p>This is some random text.</p>
+ {% block nav %}
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="{{url_for("main")}}">Home</a>
+                    </li>
+                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a>
+                    </li>
+                    <li role="presentation"><a href="{{url_for("about")}}">About</a>
+                    </li>
+                </ul>
+                {% endblock %}
+{% block content %}
         <h1>Python Instagram</h1>
                 <ul>
                     <li><a href="{{url_for("User_Recent_Media")}}">User Recent Media</a> Calls user_recent_media - Get a list of a user's most recent media</li>
@@ -20,8 +26,4 @@
                     <li><a href="{{url_for("Location_Search")}}">Location Search</a> Calls location_search - Search for a location by lat/lng</li>
                     <li><a href="{{url_for("Tags")}}">Tags</a> Search for tags, view tag info and get media by tag</li>
                 </ul>
-
-    </body>
-</html>
-
-
+{% endblock %}

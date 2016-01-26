@@ -78,7 +78,7 @@ def User_Recent_Media():
 
 @app.route("/User_Media_Feed/")
 def User_Media_Feed():
-     u = InstagramAPI(access_token=session['access_token'], client_secret=secret.secrets['client_secret'])
+    u = InstagramAPI(access_token=session['access_token'], client_secret=secret.secrets['client_secret'])
     media_feed, next_ = u.user_media_feed()
     photos_thumbnail = []
     photos_standard = []
