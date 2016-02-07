@@ -2,7 +2,11 @@
 <html lang="en">
 
 <head>
-    <title>Picsaver-Home</title>
+    <title>
+        {% block title %}
+            Picsaver
+        {% endblock %}
+    </title>
 
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,7 +32,7 @@
                 </ul>
                 {% endblock %}
             </nav>
-            <h3 class="text-muted"><a href="{{url_for("main")}}">Picsaver</a></h3>
+            <h3 class="text-muted"><a href="{{url_for("main")}}" style="text-decoration:none;">Picsaver</a></h3>
         </div>
 {% block content %}
         <div class="jumbotron">
@@ -63,7 +67,7 @@
         </div> -->
 
         <footer class="footer">
-            <p>&copy; Company 2015</p>
+            <p>&copy; Company 2016</p>
         </footer>
 
     </div>

@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+    {% block title %}
+        {{ title }}
+    {% endblock %}
+
+ {% block nav %}
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="{{url_for("main")}}">Home</a>
+                    </li>
+                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a>
+                    </li>
+                    <li role="presentation"><a href="{{url_for("about")}}">About</a>
+                    </li>
+                </ul>
+                {% endblock %}
+
+{% block content %}
+<div class="fluid-container" align="center" style="margin-top:5%;">
+    <form method="POST">
+            <input type="text" name="query" value="" placeholder="Media name" />
+            <button type="submit" value="Login" class="btn btn-large btn-success" >
+                Submit
+            </button>
+    </form>
+</div>
+{% endblock %}

@@ -15,6 +15,9 @@ Implementation of Picsaver(https://github.com/fumblehool/Picsaver) in flask
 
 ### Download code
 
+## Modules required
+Install the modules specified in the requirements.txt file.
+
 ## Create Instagram Developer Account
 
 * Create new app here, <http://instagram.com/developer/clients/register/>.
@@ -24,7 +27,7 @@ Implementation of Picsaver(https://github.com/fumblehool/Picsaver) in flask
 
 ### Set up Instagram Credentials
 
-Find your Application's credentials and enter the same in the secret.py file
+Find your Application's credentials and enter the same in the config.py file
 
 ## Start the app
 

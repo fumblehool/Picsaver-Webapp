@@ -1,11 +1,11 @@
 {% extends "index.html" %}
     {% block title %}
-        Welcome
+        {{t}}
     {% endblock %}
 
  {% block nav %}
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="{{url_for("main")}}">Home</a>
+                    <li role="presentation" class="active"><a href="{{url_for("main")}}">Home</a>
                     </li>
                     <li role="presentation"><a href="{{url_for("contact")}}">Contact</a>
                     </li>
@@ -15,7 +15,7 @@
                 {% endblock %}
 {% block content %}
         <h1>Python Instagram</h1>
-                <ul>
+              <ul class="nav nav-pills pull-right">
                     <li><a href="{{url_for("User_Recent_Media")}}">User Recent Media</a> Calls user_recent_media - Get a list of a user's most recent media</li>
                     <li><a href="{{url_for("User_Media_Feed")}}">User Media Feed</a> Calls user_media_feed - Get the currently authenticated user's media feed uses pagination</li>
                     <li><a href="{{url_for("Location_Recent_Media")}}">Location Recent Media</a> Calls location_recent_media - Get a list of recent media at a given location, in this case, the Instagram office</li>
