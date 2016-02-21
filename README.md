@@ -18,6 +18,11 @@ Implementation of Picsaver(https://github.com/fumblehool/Picsaver) in flask
 ## Modules required
 Install the modules specified in the requirements.txt file.
 
+### Set up Instagram Credentials
+* Create a new database with table named **user** consisting of two colums - **access_token** and **username** (This will help in maintaining track of users who have used your app)
+* Enter the *hostname*, *username*, *password* and *database_name* in **dbconnect.py** 
+
+
 ## Create Instagram Developer Account
 
 * Create new app here, <http://instagram.com/developer/clients/register/>.
