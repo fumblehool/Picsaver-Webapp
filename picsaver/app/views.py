@@ -121,6 +121,27 @@ def User_Media_Feed(page=1):
                            photos=photos_standard, prev=prev_page,
                            next=next_page, page=page, title=title)
 
+@app.route("/User_Liked_Media/<int:page>/")
+@app.route("/User_Liked_Media/1")
+def User_Liked_Media(page=1):
+    u = InstagramAPI(access_token=session['access_token'], client_secret=secrets['client_secret'])
+    liked_media, next_ = u.user_liked_media()
+    for i in range(1, page):
+        liked_media, next_ = u.user_liked_media(count=20, with_next_url=next_)
+    photos_thumbnail = []
+    photos_standard = []
+    title = "User Liked Media-Page " + str(page)
+    prev_page = False
+    next_page = False
+    if next_:
+        prev_page = True
+    if page != 1:
+        next_page = True
+    for media in liked_media:
+        photos_thumbnail.append("%s" % media.images['thumbnail'].url)
+        photos_standard.append("%s" % media.images['standard_resolution'].url)
+    return render_template("recent.html",thumb=photos_thumbnail,photos=photos_standard,prev=prev_page,next=next_page,page=page,title=title)
+
 
 @app.route("/Location_Recent_Media/")
 def Location_Recent_Media():
@@ -152,9 +173,22 @@ def Popular_Media():
                            photos=photos_standard, title=title)
 
 
-@app.route("/User_Search/")
+@app.route("/User_Search/", methods=['GET','POST'])
 def User_Search():
-    return "User_Search function()"
+    u = InstagramAPI(access_token=session['access_token'], client_secret=secret.secrets['client_secret'])
+    if request.method == "POST":
+        query = request.form['query']
+        if query is None:
+            return "Please Enter something."
+        else:
+            user_search_result = u.user_search(query)
+            users = []
+            user_profile_picture = []
+            for user in user_search_result:
+                users.append("{}".format(user.username))
+                user_profile_picture.append("{}".format(user.profile_picture))
+            return render_template("search.html",title="User Search",users=users,user_profile_picture=user_profile_picture,len=len(users))
+    return render_template("search.html",title="User Search")
 
 
 @app.route("/User_Follows/")

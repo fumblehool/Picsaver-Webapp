@@ -1,4 +1,6 @@
 secret.py
 *.pyc
 *.py~
+*.html~
+*.*~
 

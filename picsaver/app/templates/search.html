@@ -17,10 +17,30 @@
 {% block content %}
 <div class="fluid-container" align="center" style="margin-top:5%;">
     <form method="POST">
-            <input type="text" name="query" value="" placeholder="Media name" />
+            <input type="text" name="query" placeholder="{{title}}" />
             <button type="submit" value="Login" class="btn btn-large btn-success" >
                 Submit
             </button>
     </form>
+    {% if len==0 %}
+            <h1>No Users Found!</h1>
+    {% endif %}
+    {% if users %}
+        <table>
+        {% for i in users %}
+            {% set outer_loop = loop %}
+            <tr>
+                <td>
+                    <a href="{{user_profile_picture[outer_loop.index-1]}}">
+                        <img src="{{user_profile_picture[outer_loop.index-1]}}" height="100%" width="100%">
+                    </a>
+                </td>
+                <td>
+                <h1> {{i}}</h1>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
 </div>
 {% endblock %}
