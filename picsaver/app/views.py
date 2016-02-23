@@ -44,7 +44,6 @@ def callback():
         if access_token:
             session['access_token'] = access_token
             return redirect("/")
-
         else:
             return "Code missing. Please try again."
     else:
@@ -199,9 +198,27 @@ def User_Search():
     return render_template("search.html", title="User Search")
 
 
-@app.route("/User_Follows/")
-def User_Follows():
-    return "User_Follows function()"
+@app.route("/User_Follows/<int:page>/")
+@app.route("/User_Follows/1")
+def User_Follows(page=1):
+    u = InstagramAPI(access_token=session['access_token'],
+                     client_secret=secrets['client_secret'])
+    user_follows, next_ = u.user_follows()
+    for i in range(1, page):
+        user_follows, next_ = u.user_follows(with_next_url=next_)
+    follows = []
+    title = "User Follows-Page " + str(page)
+    prev_page = False
+    next_page = False
+    if next_:
+        prev_page = True
+    if page != 1:
+        next_page = True
+    for link in user_follows:
+        follows.append("%s" % str(link)[6:])
+    return render_template("recent.html", follows=follows,
+                           prev=prev_page, next=next_page,
+                           page=page, title=title)
 
 
 @app.route("/Location_Search/")

@@ -1,6 +1,6 @@
 {% extends "index.html" %}
     {% block title %}
-        {{ title }}
+        {{title}}
     {% endblock %}
 
  {% block nav %}
@@ -15,8 +15,38 @@
                 {% endblock %}
 
 {% block content %}
-    {% for i in thumb %}
-    {% set outer_loop = loop %}
-         <a href="{{photos[outer_loop.index-1]}}"><img src="{{i}}"/> </a>
-    {% endfor %}
+    {% if thumb %}
+        {% set o = Older %}
+        {% set n = Newer %}
+        {% for i in thumb %}
+            {% set outer_loop = loop %}
+                <a href="{{photos[outer_loop.index-1]}}"><img src="{{i}}"/> </a>
+        {% endfor %}
+    {% endif %}
+    {% if follows %}
+        {% set o = Next %}
+        {% set n = Previous %}
+        {% for i in follows %}
+            <h1>{{i}}</h1>
+        {% endfor %}
+    {% endif %}
+
+    {% if page %}
+        {% set prev_page = page+1 %}
+        {% set next_page = page -1 %}
+
+    {% set path = request.path[:-2] %}
+    <div>
+        {% if prev %}
+            <div style="float:right;">
+                <h1><a href="{{path}}/{{prev_page}}/" class="btn btn-lg btn-success">{{o}}</a></h1>
+            </div>
+        {% endif %}
+        {% if next %}
+            <div style="float:left;">
+            <h1><a href="{{path}}/{{next_page}}/" class="btn btn-lg btn-success">{{n}}</a></h1>
+            </div>
+        {% endif %}
+    </div>
+    {% endif %}
 {% endblock %}
