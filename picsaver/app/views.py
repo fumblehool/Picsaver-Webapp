@@ -12,8 +12,7 @@ def main():
     if "access_token" in session:
         u = InstagramAPI(access_token=session['access_token'],
                          client_secret=secrets['client_secret'])
-        user = str(u.user())
-        user = str(user[6:])
+        user = u.user()
         c, conn = connection()
         x = c.execute("SELECT * FROM user WHERE username = '{0}'".format(user))
 
@@ -23,8 +22,8 @@ def main():
             conn.commit()
             c.close()
             conn.close()
-        return render_template("call.html", title=user)
-
+        return render_template("call.html", title=user.username,
+                               full_name=user.full_name)
     else:
         return render_template("index.html")
 
@@ -215,10 +214,36 @@ def User_Follows(page=1):
     if page != 1:
         next_page = True
     for link in user_follows:
-        follows.append("%s" % str(link)[6:])
+        follows.append("{0}".format(link.username))
     return render_template("recent.html", follows=follows,
                            prev=prev_page, next=next_page,
                            page=page, title=title)
+
+
+@app.route("/User_Followed_By/1")
+@app.route("/User_Followed_By/<int:page>/")
+def User_Followed_By(page=1):
+    u = InstagramAPI(access_token=session['access_token'],
+                     client_secret=secrets['client_secret'])
+    user_followed_by, next_ = u.user_followed_by(client_secret=secrets
+                                                 ['client_secret'])
+    for i in range(1, page):
+        user_followed_by, next_ = u.user_followed_by(with_next_url=next_)
+    follows = []
+    profile_images = []
+    title = "User Followed By-Page " + str(page)
+    prev_page = False
+    next_page = False
+    if next_:
+        prev_page = True
+    if page != 1:
+        next_page = True
+    for link in user_followed_by:
+        follows.append("{0}".format(link.username))
+        profile_images.append("{0}".format(link.profile_picture))
+    return render_template("recent.html", follows=follows,
+                           profile_images=profile_images, prev=prev_page,
+                           next=next_page, page=page, title=title)
 
 
 @app.route("/Location_Search/")
