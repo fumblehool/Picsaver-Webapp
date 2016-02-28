@@ -23,7 +23,9 @@ def main():
             c.close()
             conn.close()
         return render_template("call.html", title=user.username,
-                               full_name=user.full_name)
+                               full_name=user.full_name,
+                               profile_picture=user.profile_picture,
+                               counts=user.counts)
     else:
         return render_template("index.html")
 
@@ -39,7 +41,6 @@ def callback():
     code = request.args.get('code')
     if code:
         access_token = api.exchange_code_for_access_token(code)[0]
-
         if access_token:
             session['access_token'] = access_token
             return redirect("/")
@@ -88,8 +89,9 @@ def User_Recent_Media(page=1):
     if page != 1:
         next_page = True
     for media in recent_media:
-        photos_thumbnail.append("%s" % media.images['thumbnail'].url)
-        photos_standard.append("%s" % media.images['standard_resolution'].url)
+        photos_thumbnail.append("{}".format(media.images['thumbnail'].url))
+        photos_standard.append("{}".format(media.images['standard_resolution']
+                               .url))
     return render_template("recent.html", thumb=photos_thumbnail,
                            photos=photos_standard, prev=prev_page,
                            next=next_page, page=page, title=title)
@@ -113,8 +115,9 @@ def User_Media_Feed(page=1):
     if page != 1:
         next_page = True
     for media in media_feed:
-        photos_thumbnail.append("%s" % media.images['thumbnail'].url)
-        photos_standard.append("%s" % media.images['standard_resolution'].url)
+        photos_thumbnail.append("{}".format(media.images['thumbnail'].url))
+        photos_standard.append("{}".format(media.images['standard_resolution']
+                               .url))
     return render_template("recent.html", thumb=photos_thumbnail,
                            photos=photos_standard, prev=prev_page,
                            next=next_page, page=page, title=title)
@@ -138,25 +141,44 @@ def User_Liked_Media(page=1):
     if page != 1:
         next_page = True
     for media in liked_media:
-        photos_thumbnail.append("%s" % media.images['thumbnail'].url)
-        photos_standard.append("%s" % media.images['standard_resolution'].url)
+        photos_thumbnail.append("{}".format(media.images['thumbnail'].url))
+        photos_standard.append("{}".format(media.images['standard_resolution']
+                               .url))
     return render_template("recent.html", thumb=photos_thumbnail,
                            photos=photos_standard, prev=prev_page,
                            next=next_page, page=page, title=title)
 
 
-@app.route("/Location_Recent_Media/")
+@app.route("/Location_Recent_Media/", methods=['GET', 'POST'])
 def Location_Recent_Media():
-    return "Location_Recent_Media function()"
+    if request.method == "POST":
+        lat = request.form['latitude']
+        lng = request.form['longitude']
+        u = InstagramAPI(access_token=session['access_token'])
+        media_search = u.media_search(lat=lat, lng=lng, count=32)
+        media = []
+        for link in media_search:
+            media.append("{}".format(link.get_thumbnail_url()))
+        return render_template("media_search.html", media=media)
+    return render_template("media_search.html", title="Location Recent Media")
 
 
 @app.route("/Media_Search/", methods=['GET', 'POST'])
 def Media_Search():
     if request.method == "POST":
-        query = request.form['query']
+        q = request.form['query']
+        lat = request.form['latitude']
+        lng = request.form['longitude']
+        if not q or not lat or not lng:
+            e = "Please Enter latitude and longitude"
+            return render_template("media_search.html", title="Media Search",
+                                   error=e)
         u = InstagramAPI(access_token=session['access_token'])
-        media_search, next_ = u.media_search(query)
-        # return str(media_search)
+        media_search = u.media_search(query=q, lat=lat, lng=lng, count=32)
+        media = []
+        for link in media_search:
+            media.append("{}".format(link.get_thumbnail_url()))
+        return render_template("media_search.html", media=media)
     return render_template("media_search.html", title="Media Search")
 
 
@@ -190,10 +212,15 @@ def User_Search():
             for user in user_search_result:
                 users.append("{}".format(user.username))
                 user_profile_picture.append("{}".format(user.profile_picture))
+            if len(users) is 0:
+                e = "No Users Found!"
+                return render_template("search.html", error=e,
+                                       title="User Search")
+
             return render_template("search.html", title="User Search",
                                    users=users,
                                    user_profile_picture=user_profile_picture,
-                                   len=len(users))
+                                   )
     return render_template("search.html", title="User Search")
 
 
@@ -206,6 +233,7 @@ def User_Follows(page=1):
     for i in range(1, page):
         user_follows, next_ = u.user_follows(with_next_url=next_)
     follows = []
+    profile_images = []
     title = "User Follows-Page " + str(page)
     prev_page = False
     next_page = False
@@ -215,6 +243,7 @@ def User_Follows(page=1):
         next_page = True
     for link in user_follows:
         follows.append("{0}".format(link.username))
+        profile_images.append("{0}".format(link.profile_picture))
     return render_template("recent.html", follows=follows,
                            prev=prev_page, next=next_page,
                            page=page, title=title)
@@ -249,6 +278,42 @@ def User_Followed_By(page=1):
 @app.route("/Location_Search/")
 def Location_Search():
     return "Location_Search function()"
+
+
+@app.route("/Tag_Search/1", methods=['GET', 'POST'])
+@app.route("/Tag_Search/<int:page>/", methods=['GET', 'POST'])
+def Tag_Search(page=1):
+    if request.method == "POST":
+        query = request.form["query"]
+        if not query:
+            e = "Please Enter something."
+            return render_template("search.html", error=e, title="Tag Search")
+        u = InstagramAPI(access_token=session['access_token'],
+                         client_secret=secrets['client_secret'])
+        tag_search, next_tag = u.tag_search(q=query)
+        tag_recent_media, next_ = u.tag_recent_media(tag_name=tag_search[0]
+                                                     .name)
+        for i in range(1, page):
+            tag_recent_media, next_ = u.tag_recent_media(tag_name=tag_search[0]
+                                                         .name,
+                                                         with_next_url=next_)
+        tags = []
+        imgs = []
+        title = "Tag Search-Page " + str(page)
+        prev_page = False
+        next_page = False
+        if next_:
+            prev_page = True
+        if page != 1:
+            next_page = True
+        for media in tag_recent_media:
+            tags.append("{}".format(media.get_thumbnail_url()))
+            tags.append("{}".format(media.get_standard_url()))
+        return render_template("search.html", tags=tags, imgs=imgs,
+                               prev=prev_page, next=next_page, page=page,
+                               title=title)
+
+    return render_template("search.html")
 
 
 @app.route("/Tags/")

@@ -15,6 +15,16 @@
                 {% endblock %}
 {% block content %}
         <h1>Hello {{full_name}}!</h1>
+            <img src="{{profile_picture}}" class="image_test img-responsive"/>
+            <div class="col-md-4 col-sm-4">
+                <h2 class="center">Media:{{counts['media']}}</h2>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <h2 class="center">Follows:{{counts['follows']}}</h2>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <h2 class="center">Followed By:{{counts['followed_by']}}</h2>
+            </div>
               <ul class="nav nav-pills pull-right">
                     <li><a href="{{url_for("User_Recent_Media")}}">User Recent Media</a> Calls user_recent_media - Get a list of a user's most recent media</li>
                     <li><a href="{{url_for("User_Media_Feed")}}">User Media Feed</a> Calls user_media_feed - Get the currently authenticated user's media feed uses pagination</li>
@@ -26,6 +36,8 @@
                     <li><a href="{{url_for("User_Follows")}}">User Follows</a> Get the followers of @instagram uses pagination</li>
                     <li><a href="{{url_for("User_Followed_By")}}">User Followed By</a> Get the followed by of @instagram uses pagination</li>
                     <li><a href="{{url_for("Location_Search")}}">Location Search</a> Calls location_search - Search for a location by lat/lng</li>
+                    <li><a href="{{url_for("Tag_Search")}}">Tag Search</a> Calls tag_search - Search for a image by tagname</li>
                     <li><a href="{{url_for("Tags")}}">Tags</a> Search for tags, view tag info and get media by tag</li>
                 </ul>
 {% endblock %}
+

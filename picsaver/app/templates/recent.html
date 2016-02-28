@@ -23,7 +23,7 @@
         {% set n = Newer %}
         {% for i in thumb %}
             {% set outer_loop = loop %}
-                <a href="{{photos[outer_loop.index-1]}}"><img src="{{i}}"/> </a>
+                <a href="{{photos[outer_loop.index-1]}}"><img src="{{i}}" class="image_test"/> </a>
         {% endfor %}
     {% endif %}
     {% if follows %}
@@ -32,11 +32,9 @@
             {% set outer_loop = loop %}
                 <tr>
                     <td>
-                        <div style="border-radius:100%;">
                         <a href="{{profile_images[outer_loop.index-1]}}">
-                        <img src="{{profile_images[outer_loop.index-1]}}">
+                        <img src="{{profile_images[outer_loop.index-1]}}" class="image_test"/>
                         </a>
-                        </div>
                     </td>
                     <td>
                         <h1>{{i}}</h1>

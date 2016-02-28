@@ -18,35 +18,19 @@
 <div class="fluid-container" align="center" style="margin-top:5%;">
     <form method="POST">
             <input type="text" name="query" placeholder="{{title}}" />
+            <input type="text" name="latitude" placeholder="Latitude" />
+            <input type="text" name="longitude" placeholder="Longitude" />
             <button type="submit" value="Login" class="btn btn-large btn-success" >
                 Submit
             </button>
-    </form>
-    {% if error %}
-        <h1>{{error}}</h1>
-    {% endif %}
 
-    {% if users %}
-        <table>
-        {% for i in users %}
-            {% set outer_loop = loop %}
-            <tr>
-                <td>
-                    <a href="{{user_profile_picture[outer_loop.index-1]}}">
-                        <img src="{{user_profile_picture[outer_loop.index-1]}}" class="image_test">
-                    </a>
-                </td>
-                <td>
-                <h1> {{i}}</h1>
-                </td>
-            </tr>
-        {% endfor %}
-        </table>
-    {% endif %}
-    {% if tags%}
-        {% for i in tags %}
+    </form>
+        {% if error %}
+            <h1>{{error}}</h1>
+        {% endif %}
+        {% for i in media %}
             <img src="{{i}}"/>
-        {% endfor%}
-    {% endif %}
+        {% endfor %}
+
 </div>
 {% endblock %}
