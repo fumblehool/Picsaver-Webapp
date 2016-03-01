@@ -5,12 +5,13 @@
 
  {% block nav %}
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="{{url_for("main")}}">Home</a>
-                    </li>
-                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a>
-                    </li>
-                    <li role="presentation"><a href="{{url_for("about")}}">About</a>
-                    </li>
+                    <li role="presentation"><a href="{{url_for("main")}}">Home</a></li>
+                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a></li>
+                    {% if session['access_token']%}
+                    <li role="presentation"><a href="{{url_for("logout")}}">Logout</a></li>
+                    {% else %}
+                    <li role="presentation"><a href="{{url_for("connect")}}">Login</a></li>
+                    {% endif %}
                 </ul>
                 {% endblock %}
 

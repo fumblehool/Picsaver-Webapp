@@ -5,12 +5,13 @@
 
  {% block nav %}
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation" class="active"><a href="{{url_for("main")}}">Home</a>
-                    </li>
-                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a>
-                    </li>
-                    <li role="presentation"><a href="{{url_for("about")}}">About</a>
-                    </li>
+                    <li role="presentation" class="active"><a href="{{url_for("main")}}">Home</a></li>
+                    <li role="presentation"><a href="{{url_for("contact")}}">Contact</a></li>
+                    {% if session['access_token']%}
+                    <li role="presentation"><a href="{{url_for("logout")}}">Logout</a></li>
+                    {% else %}
+                    <li role="presentation"><a href="{{url_for("connect")}}">Login</a></li>
+                    {% endif %}
                 </ul>
                 {% endblock %}
 {% block content %}
@@ -26,18 +27,30 @@
                 <h2 class="center">Followed By:{{counts['followed_by']}}</h2>
             </div>
               <ul class="nav nav-pills pull-right">
-                    <li><a href="{{url_for("User_Recent_Media")}}">User Recent Media</a> Calls user_recent_media - Get a list of a user's most recent media</li>
-                    <li><a href="{{url_for("User_Media_Feed")}}">User Media Feed</a> Calls user_media_feed - Get the currently authenticated user's media feed uses pagination</li>
-                    <li><a href="{{url_for("User_Liked_Media")}}">User Liked Media</a> Calls user_liked_feed - Get the currently authenticated user's liked media</li>
-                    <li><a href="{{url_for("Location_Recent_Media")}}">Location Recent Media</a> Calls location_recent_media - Get a list of recent media at a given location, in this case, the Instagram office</li>
-                    <li><a href="{{url_for("Media_Search")}}">Media Search</a> Calls media_search - Get a list of media close to a given latitude and longitude</li>
-                    <li><a href="{{url_for("Popular_Media")}}">Popular Media</a> Calls media_popular - Get a list of the overall most popular media items</li>
-                    <li><a href="{{url_for("User_Search")}}">User Search</a> Calls user_search - Search for users on instagram, by name or username</li>
-                    <li><a href="{{url_for("User_Follows")}}">User Follows</a> Get the followers of @instagram uses pagination</li>
-                    <li><a href="{{url_for("User_Followed_By")}}">User Followed By</a> Get the followed by of @instagram uses pagination</li>
-                    <li><a href="{{url_for("Location_Search")}}">Location Search</a> Calls location_search - Search for a location by lat/lng</li>
-                    <li><a href="{{url_for("Tag_Search")}}">Tag Search</a> Calls tag_search - Search for a image by tagname</li>
-                    <li><a href="{{url_for("Tags")}}">Tags</a> Search for tags, view tag info and get media by tag</li>
+                    <li><a href="{{url_for("User_Recent_Media")}}" class="c">User Recent Media</a></li>
+                    <!--Calls user_recent_media - Get a list of a user's most recent media-->
+                    <li><a href="{{url_for("User_Media_Feed")}}" class="c">User Media Feed</a></li>
+                    <!--Calls user_media_feed - Get the currently authenticated user's media feed uses pagination-->
+                    <li><a href="{{url_for("User_Liked_Media")}}" class="c">User Liked Media</a></li>
+                    <!--Calls user_liked_feed - Get the currently authenticated user's liked media</li>-->
+                    <li><a href="{{url_for("Location_Recent_Media")}}" class="c">Location Recent Media</a></li>
+                    <!--Calls location_recent_media - Get a list of recent media at a given location, in this case, the Instagram office</li>-->
+                    <li><a href="{{url_for("Media_Search")}}" class="c">Media Search</a></li>
+                    <!--Calls media_search - Get a list of media close to a given latitude and longitude</li>-->
+                    <li><a href="{{url_for("Popular_Media")}}" class="c">Popular Media</a></li>
+                    <!--Calls media_popular - Get a list of the overall most popular media items</li>-->
+                    <li><a href="{{url_for("User_Search")}}" class="c">User Search</a></li>
+                    <!--Calls user_search - Search for users on instagram, by name or username</li>-->
+                    <li><a href="{{url_for("User_Follows")}}" class="c">User Follows</a></li>
+                    <!--Get the followers of @instagram uses pagination</li>-->
+                    <li><a href="{{url_for("User_Followed_By")}}" class="c">User Followed By</a></li>
+                    <!--Get the followed by of @instagram uses pagination</li>-->
+                    <li><a href="{{url_for("Location_Search")}}" class="c">Location Search</a></li>
+                    <!--Calls location_search - Search for a location by lat/lng</li>-->
+                    <li><a href="{{url_for("Tag_Search")}}" class="c">Tag Search</a></li>
+                    <!--Calls tag_search - Search for a image by tagname-->
+                    <li><a href="{{url_for("Tags")}}" class="c">Tags</a></li>
+                    <!--Search for tags, view tag info and get media by tag-->
                 </ul>
 {% endblock %}
 

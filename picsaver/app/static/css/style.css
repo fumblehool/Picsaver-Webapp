@@ -4,7 +4,7 @@ footer{
 
 h1 {
     text-align: center;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 a.user{
@@ -45,7 +45,7 @@ h1.page_h{
 }
 
 .c{
-    font-size: 34px;
+    font-size: 24px;
 }
 
 .center{

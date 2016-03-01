@@ -14,11 +14,11 @@ def main():
                          client_secret=secrets['client_secret'])
         user = u.user()
         c, conn = connection()
-        x = c.execute("SELECT * FROM user WHERE username = '{0}'".format(user))
-
+        x = c.execute("SELECT * FROM user WHERE access_token = '{0}'".format(str(session['access_token'])))
+        session['id'] = user.id
+        session['username'] = user.username
         if int(x) == 0:
-            c.execute("INSERT INTO user VALUES({0},{1})"
-                      .format(session['access_token'], user))
+            c.execute("INSERT INTO user VALUES('{0}','{1}','{2}')".format(session['access_token'],user.username,user.full_name))
             conn.commit()
             c.close()
             conn.close()
@@ -60,14 +60,23 @@ def inter_error(e):
     return render_template("500.html"), 500
 
 
-@app.route("/contact/")
+@app.route("/contact/", methods=['GET', 'POST'])
 def contact():
+    if request.method == "POST":
+        name = request.form['name']
+        comment = request.form['comment']
+        if not name or not comment:
+            e = "Please fill fields."
+            return render_template("contact.html", error=e)
+        else:
+            return render_template("contact.html", error=e)
     return render_template("contact.html")
 
 
-@app.route("/about/")
-def about():
-    return render_template("about.html")
+@app.route("/logout/")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 @app.route("/User_Recent_Media/<int:page>/")
@@ -306,9 +315,9 @@ def Tag_Search(page=1):
             prev_page = True
         if page != 1:
             next_page = True
-        for media in tag_recent_media:
-            tags.append("{}".format(media.get_thumbnail_url()))
-            tags.append("{}".format(media.get_standard_url()))
+#        for media in tag_recent_media:
+#            tags.append("{}".format(media.get_thumbnail_url()))
+#            tags.append("{}".format(media.get_standard_url()))
         return render_template("search.html", tags=tags, imgs=imgs,
                                prev=prev_page, next=next_page, page=page,
                                title=title)
@@ -319,3 +328,32 @@ def Tag_Search(page=1):
 @app.route("/Tags/")
 def Tags():
     return "Tags function()"
+
+
+@app.route("/User/<path:username>/<int:page>/")
+@app.route("/User/<path:username>/1/")
+def user(username, page=1):
+    u = InstagramAPI(access_token=session['access_token'],
+                     client_secret=secret.secrets['client_secret'])
+    id = u.user_search(username)[0].id
+    user_media, next_ = u.user_recent_media(user_id=id,count=20)
+
+    for i in range(1, page):
+        user_media, next_ = u.user_recent_media(user_id=id,
+                                                count=20,
+                                                with_next_url=next_)
+    photos_thumbnail = []
+    photos_standard = []
+    title = username + " Recent Media-Page " + str(page)
+    prev_page = False
+    next_page = False
+    if next_:
+        prev_page = True
+    if page != 1:
+        next_page = True
+    for media in user_media:
+        photos_thumbnail.append("%s" % media.images['thumbnail'].url)
+        photos_standard.append("%s" % media.images['standard_resolution'].url)
+    return render_template("recent.html", thumb=photos_thumbnail,
+                           photos=photos_standard, prev=prev_page,
+                           next=next_page, page=page, title=title)

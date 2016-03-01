@@ -6,11 +6,27 @@
                     </li>
                     <li role="presentation" class="active"><a href="{{url_for("contact")}}">Contact</a>
                     </li>
-                    <li role="presentation"><a href="{{url_for("about")}}">About</a>
-                    </li>
+                    {% if session['access_token']%}
+                    <li role="presentation"><a href="{{url_for("logout")}}">Logout</a></li>
+                    {% else %}
+                    <li role="presentation"><a href="{{url_for("connect")}}">Login</a></li>
+                    {% endif %}
                 </ul>
                 {% endblock %}
 
 {% block content %}
-    <p> Some paragraph </p>
+    <div class="center" style="margin:auto;">
+    <form method='POST'>
+        <div class="center">
+            <input type="text" name="name" placeholder="Name"/>
+        </div>
+        <div class="center">
+            <input type="textbox"cols="10" rows="10" name="comment" placeholder="Enter your comments!"/>
+        </div>
+        <button class="btn btn-lg btn-success" value="submit">Comment!</button>
+    </form>
+    {% if error %}
+            <h1>{{error}}</h1>
+    {% endif %}
+    </div>
 {% endblock %}
